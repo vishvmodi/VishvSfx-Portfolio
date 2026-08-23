@@ -1282,3 +1282,515 @@ footer {
     min-width: 0;
   }
 }
+.testi-grid {
+  margin-top: 36px;
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  gap: 22px;
+}
+
+.testi-card {
+  padding: 26px 24px;
+  border-radius: var(--radius-md);
+  background: var(--glass);
+  border: 1px solid var(--glass-border);
+  backdrop-filter: blur(14px);
+  display: flex;
+  flex-direction: column;
+  gap: 20px;
+  transition:
+    transform 0.35s var(--ease),
+    background 0.35s var(--ease),
+    border-color 0.35s var(--ease);
+}
+
+.testi-card:hover {
+  transform: translateY(-6px);
+  background: var(--glass-strong);
+  border-color: rgba(255, 100, 70, 0.4);
+}
+
+.testi-card__text {
+  font-size: 0.92rem;
+  line-height: 1.65;
+  color: var(--ink-dim);
+}
+
+.testi-card__author {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  margin-top: auto;
+}
+
+.testi-card__avatar {
+  width: 42px;
+  height: 42px;
+  border-radius: 50%;
+  object-fit: cover;
+  border: 1px solid var(--glass-border);
+  flex-shrink: 0;
+}
+
+.testi-card__meta {
+  display: flex;
+  flex-direction: column;
+  gap: 2px;
+  min-width: 0;
+}
+
+.testi-card__name {
+  font-weight: 600;
+  font-size: 0.9rem;
+  color: var(--ink);
+  transition: color 0.25s ease;
+}
+
+.testi-card__name:hover {
+  color: var(--red-2);
+}
+
+.testi-card__role {
+  font-family: var(--font-mono);
+  font-size: 0.68rem;
+  color: var(--ink-faint);
+  text-transform: uppercase;
+  letter-spacing: 0.05em;
+}
+
+
+/* ============================================
+   CTR PROOF — SINGLE BIG DRAG-TO-COMPARE SLIDER
+   ============================================ */
+.ctr-compare {
+  margin-top: 36px;
+  max-width: 860px;
+  margin-left: auto;
+  margin-right: auto;
+  text-align: center;
+}
+
+/* --pos is the % (from the left) currently showing the
+   "before" image. Set inline on the frame, updated by JS
+   via pointer events (drag/click/keyboard) — no <input>
+   involved, which is what was causing the stuck-left bug. */
+.ctr-compare__frame {
+  position: relative;
+  width: 100%;
+  aspect-ratio: 16 / 9;
+  border-radius: var(--radius-lg);
+  overflow: hidden;
+  border: 1px solid var(--glass-border);
+  background: #100505;
+  box-shadow:
+    0 0 0 1px rgba(255, 100, 70, 0.25),
+    0 20px 50px -18px rgba(255, 40, 20, 0.5);
+  transition: box-shadow 0.4s var(--ease);
+  cursor: ew-resize;
+  touch-action: none;
+  user-select: none;
+}
+
+.ctr-compare__frame:hover,
+.ctr-compare__frame:focus-visible {
+  box-shadow:
+    0 0 0 1px rgba(255, 130, 90, 0.45),
+    0 26px 56px -16px rgba(255, 40, 20, 0.7);
+}
+
+.ctr-compare__img {
+  position: absolute;
+  inset: 0;
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  object-position: center;
+  max-width: none;
+  pointer-events: none;
+  -webkit-user-drag: none;
+}
+
+/* "after" sits underneath, always full-frame */
+.ctr-compare__img--after {
+  z-index: 1;
+}
+
+/* "before" sits on top, clipped to --pos from the left.
+   Drag left  -> --pos shrinks -> more "after" shows.
+   Drag right -> --pos grows   -> more "before" shows. */
+.ctr-compare__img--before {
+  z-index: 2;
+  filter: saturate(0.8) brightness(0.88);
+  clip-path: inset(0 calc(100% - var(--pos)) 0 0);
+}
+
+.ctr-compare__label {
+  position: absolute;
+  top: 12px;
+  z-index: 4;
+  font-family: var(--font-mono);
+  font-size: 0.66rem;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+  padding: 4px 10px;
+  border-radius: 999px;
+  pointer-events: none;
+}
+
+.ctr-compare__label--before {
+  left: 12px;
+  color: var(--ink-dim);
+  background: rgba(0, 0, 0, 0.6);
+}
+
+.ctr-compare__label--after {
+  right: 12px;
+  color: #fff;
+  background: linear-gradient(135deg, var(--red-1), var(--red-deep));
+}
+
+/* Divider + drag handle */
+.ctr-compare__handle {
+  position: absolute;
+  top: 0;
+  bottom: 0;
+  left: var(--pos);
+  z-index: 3;
+  width: 2px;
+  background: rgba(255, 246, 240, 0.85);
+  transform: translateX(-50%);
+  pointer-events: none;
+  box-shadow: 0 0 12px rgba(0, 0, 0, 0.4);
+}
+
+.ctr-compare__handle-btn {
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+  width: 40px;
+  height: 40px;
+  border-radius: 50%;
+  display: grid;
+  place-items: center;
+  background: linear-gradient(135deg, var(--red-1), var(--red-deep));
+  color: #fff;
+  box-shadow:
+    0 6px 18px -6px rgba(255, 40, 20, 0.8),
+    0 0 0 3px rgba(10, 5, 5, 0.5);
+}
+
+.ctr-compare__stat {
+  margin-top: 20px;
+  font-family: var(--font-display);
+  font-size: clamp(1.5rem, 3vw, 2rem);
+  letter-spacing: 0.01em;
+  background: linear-gradient(100deg, var(--red-1), var(--red-2));
+  -webkit-background-clip: text;
+  background-clip: text;
+  color: transparent;
+}
+
+
+/* ============================================
+   NEW SECTIONS — RESPONSIVE
+   ============================================ */
+@media (max-width: 980px) {
+  .testi-grid {
+    grid-template-columns: repeat(2, 1fr);
+  }
+}
+
+@media (max-width: 640px) {
+  .testi-grid {
+    grid-template-columns: 1fr;
+  }
+}
+
+/* The drag-to-compare slider is a single frame, so it
+   already scales cleanly at every width — no overrides needed. */
+.testi-grid {
+  margin-top: 36px;
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  gap: 22px;
+}
+
+.testi-card {
+  padding: 26px 24px;
+  border-radius: var(--radius-md);
+  background: var(--glass);
+  border: 1px solid var(--glass-border);
+  backdrop-filter: blur(14px);
+  display: flex;
+  flex-direction: column;
+  gap: 20px;
+  transition:
+    transform 0.35s var(--ease),
+    background 0.35s var(--ease),
+    border-color 0.35s var(--ease);
+}
+
+.testi-card:hover {
+  transform: translateY(-6px);
+  background: var(--glass-strong);
+  border-color: rgba(255, 100, 70, 0.4);
+}
+
+.testi-card__text {
+  font-size: 0.92rem;
+  line-height: 1.65;
+  color: var(--ink-dim);
+}
+
+.testi-card__author {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  margin-top: auto;
+}
+
+.testi-card__avatar {
+  width: 42px;
+  height: 42px;
+  border-radius: 50%;
+  object-fit: cover;
+  border: 1px solid var(--glass-border);
+  flex-shrink: 0;
+}
+
+.testi-card__meta {
+  display: flex;
+  flex-direction: column;
+  gap: 2px;
+  min-width: 0;
+}
+
+.testi-card__name {
+  font-weight: 600;
+  font-size: 0.9rem;
+  color: var(--ink);
+  transition: color 0.25s ease;
+}
+
+.testi-card__name:hover {
+  color: var(--red-2);
+}
+
+.testi-card__role {
+  font-family: var(--font-mono);
+  font-size: 0.68rem;
+  color: var(--ink-faint);
+  text-transform: uppercase;
+  letter-spacing: 0.05em;
+}
+
+
+/* ============================================
+   CTR PROOF — SINGLE BIG DRAG-TO-COMPARE SLIDER
+   ============================================ */
+.ctr-compare {
+  margin-top: 36px;
+  max-width: 860px;
+  margin-left: auto;
+  margin-right: auto;
+  text-align: center;
+}
+
+/* --pos is the % (from the left) currently showing the
+   "before" image. Set inline on the frame, updated by JS
+   via pointer events (drag/click/keyboard) — no <input>
+   involved, which is what was causing the stuck-left bug. */
+.ctr-compare__frame {
+  position: relative;
+  width: 100%;
+  aspect-ratio: 16 / 9;
+  border-radius: var(--radius-lg);
+  overflow: hidden;
+  border: 1px solid var(--glass-border);
+  background: #100505;
+  box-shadow:
+    0 0 0 1px rgba(255, 100, 70, 0.25),
+    0 20px 50px -18px rgba(255, 40, 20, 0.5);
+  transition: box-shadow 0.4s var(--ease);
+  cursor: ew-resize;
+  touch-action: none;
+  user-select: none;
+}
+
+.ctr-compare__frame:hover,
+.ctr-compare__frame:focus-visible {
+  box-shadow:
+    0 0 0 1px rgba(255, 130, 90, 0.45),
+    0 26px 56px -16px rgba(255, 40, 20, 0.7);
+}
+
+.ctr-compare__img {
+  position: absolute;
+  inset: 0;
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  object-position: center;
+  max-width: none;
+  pointer-events: none;
+  -webkit-user-drag: none;
+}
+
+/* "after" sits underneath, always full-frame */
+.ctr-compare__img--after {
+  z-index: 1;
+}
+
+/* "before" sits on top, clipped to --pos from the left.
+   Drag left  -> --pos shrinks -> more "after" shows.
+   Drag right -> --pos grows   -> more "before" shows. */
+.ctr-compare__img--before {
+  z-index: 2;
+  filter: saturate(0.8) brightness(0.88);
+  clip-path: inset(0 calc(100% - var(--pos)) 0 0);
+}
+
+.ctr-compare__label {
+  position: absolute;
+  top: 12px;
+  z-index: 4;
+  font-family: var(--font-mono);
+  font-size: 0.66rem;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+  padding: 4px 10px;
+  border-radius: 999px;
+  pointer-events: none;
+}
+
+.ctr-compare__label--before {
+  left: 12px;
+  color: var(--ink-dim);
+  background: rgba(0, 0, 0, 0.6);
+}
+
+.ctr-compare__label--after {
+  right: 12px;
+  color: #fff;
+  background: linear-gradient(135deg, var(--red-1), var(--red-deep));
+}
+
+/* Divider + drag handle */
+.ctr-compare__handle {
+  position: absolute;
+  top: 0;
+  bottom: 0;
+  left: var(--pos);
+  z-index: 3;
+  width: 2px;
+  background: rgba(255, 246, 240, 0.85);
+  transform: translateX(-50%);
+  pointer-events: none;
+  box-shadow: 0 0 12px rgba(0, 0, 0, 0.4);
+}
+
+.ctr-compare__handle-btn {
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+  width: 40px;
+  height: 40px;
+  border-radius: 50%;
+  display: grid;
+  place-items: center;
+  background: linear-gradient(135deg, var(--red-1), var(--red-deep));
+  color: #fff;
+  box-shadow:
+    0 6px 18px -6px rgba(255, 40, 20, 0.8),
+    0 0 0 3px rgba(10, 5, 5, 0.5);
+}
+
+.ctr-compare__stat {
+  margin-top: 20px;
+  font-family: var(--font-display);
+  font-size: clamp(1.5rem, 3vw, 2rem);
+  letter-spacing: 0.01em;
+  background: linear-gradient(100deg, var(--red-1), var(--red-2));
+  -webkit-background-clip: text;
+  background-clip: text;
+  color: transparent;
+}
+
+
+/* ============================================
+   NEW SECTIONS — RESPONSIVE
+   ============================================ */
+@media (max-width: 980px) {
+  .testi-grid {
+    grid-template-columns: repeat(2, 1fr);
+  }
+}
+
+@media (max-width: 640px) {
+  .testi-grid {
+    grid-template-columns: 1fr;
+  }
+}
+
+/* The drag-to-compare slider is a single frame, so it
+   already scales cleanly at every width — no overrides needed. */
+
+
+/* ============================================
+   BACK TO TOP BUTTON
+   ============================================ */
+.back-to-top {
+  position: fixed;
+  right: clamp(16px, 3vw, 32px);
+  bottom: clamp(16px, 3vw, 32px);
+  z-index: 60;
+
+  width: 46px;
+  height: 46px;
+  display: grid;
+  place-items: center;
+  border-radius: 50%;
+
+  background: linear-gradient(135deg, var(--red-1), #b3170d 80%);
+  color: #fff;
+  border: 1px solid rgba(255, 120, 90, 0.35);
+
+  box-shadow:
+    0 10px 30px -10px rgba(255, 40, 20, 0.65),
+    inset 0 1px 0 rgba(255,255,255,0.25);
+
+  opacity: 0;
+  transform: translateY(14px);
+  pointer-events: none;
+
+  transition:
+    opacity 0.35s var(--ease),
+    transform 0.35s var(--ease),
+    box-shadow 0.35s var(--ease),
+    background 0.35s var(--ease);
+}
+
+.back-to-top.is-visible {
+  opacity: 1;
+  transform: translateY(0);
+  pointer-events: auto;
+}
+
+.back-to-top:hover {
+  transform: translateY(-3px);
+  box-shadow: 0 16px 36px -10px rgba(255, 40, 20, 0.8);
+}
+
+@media (max-width: 480px) {
+  .back-to-top {
+    width: 42px;
+    height: 42px;
+  }
+}
+
+
+html {
+  scroll-behavior: smooth;
+}
